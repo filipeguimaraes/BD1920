@@ -58,7 +58,7 @@ LOAD DATA INFILE 'csv/testeclinico.csv'
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n';
 
-LOAD DATA INFILE 'csv/equipa_evolvente.csv'
+LOAD DATA INFILE 'csv/equipa_envolvente.csv'
     INTO TABLE EquipaEnvolvente
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
