@@ -1,0 +1,161 @@
+// load_csv
+
+// Create Clubes
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///clube.csv" AS row
+CREATE (:Clube {cod_clube: toInteger(row.cod_clube), designacao: row.designacao});
+
+CREATE INDEX ON :Clube(cod_clube);
+
+// Create Atletas
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///atleta.csv" AS row
+CREATE (:Atleta {nif: toInteger(row.nif), cod_postal: row.cod_postal, DOB: datetime(replace(row.DOB,' ','T')), nome: row.nome, sexo: row.sexo, peso: toInteger(row.peso), altura: toFloat(row.altura)});
+
+CREATE INDEX ON :Atleta(nif);
+
+// Create Modalidade
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///modalidade.csv" AS row
+CREATE (:Modalidade {cod_modalidade: toInteger(row.cod_modalidade), designacao: row.designacao});
+
+CREATE INDEX ON :Modalidade(cod_modalidade);
+
+// Create Competicao
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///competicao.csv" AS row
+CREATE (:Competicao {id_competicao: toInteger(row.id_competicao), designacao: row.designacao, nome: row.nome, data: date(row.data), local: row.local, hora: time(row.hora)});
+
+CREATE INDEX ON :Competicao(id_competicao);
+
+// Create Contacto
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///contacto.csv" AS row
+CREATE (:Contacto {contactocol: row.Contactocol});
+
+CREATE INDEX ON :Contacto(contactocol);
+
+// Create TesteClinico
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///testeclinico.csv" AS row
+CREATE (:TesteClinico {id_teste: toInteger(row.id_teste), data: date(row.data), preco: toFloat(row.preco), hora: time(row.hora)});
+
+CREATE INDEX ON :TesteClinico(id_teste);
+
+// Create Recurso
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///recurso.csv" AS row
+CREATE (:Recurso {cod_recurso: toInteger(row.cod_recurso), designacao: row.designacao});
+
+CREATE INDEX ON :Recurso(cod_recurso);
+
+// Create Clinica
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///clinica.csv" AS row
+CREATE (:Clinica {cod_clinica: toInteger(row.cod_clinica), nome: row.nome, localidade: row.localidade});
+
+CREATE INDEX ON :Clinica(cod_clinica);
+
+// Create Staff
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///staff.csv" AS row
+CREATE (:Staff {id_staff: toInteger(row.id_staff), nome: row.nome, cargo: row.cargo, especialidade: row.especialidade, data_ini_servico: datetime(replace(row.data_ini_servico,' ','T'))});
+
+CREATE INDEX ON :Staff(id_staff);
+
+//RelationShip PRATICA
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///atleta.csv" AS row
+MATCH (a:Atleta{nif: toInteger(row.nif)})
+MATCH (m:Modalidade {cod_modalidade: toInteger(row.cod_modalidade)})
+MERGE (a)-[:PRATICA]->(m);
+
+
+//RelationShip COMPETE_POR
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///atleta.csv" AS row
+MATCH (a:Atleta{nif: toInteger(row.nif)})
+MATCH (c:Clube {cod_clube: toInteger(row.cod_clube)})
+MERGE (a)-[:COMPETE_POR]->(c);
+
+
+//RelationShip INSCRITO
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///inscricao.csv" AS row
+MATCH (a:Atleta{nif: toInteger(row.nif)})
+MATCH (c:Competicao {id_competicao: toInteger(row.id_competicao)})
+MERGE (a)-[:INSCRITO{data : date(row.data), hora: time(row.hora)}]-(c);
+
+
+//RelationShip CONTACTO_DE
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///contacto.csv" AS row
+MATCH (a:Atleta{nif: toInteger(row.Atleta_nif_atleta)})
+MATCH (c:Contacto {contactocol: row.Contactocol})
+MERGE (c)-[:CONTACTO_DE]->(a);
+
+
+//RelationShip DA_MODALIDADE
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///competicao.csv" AS row
+MATCH (m:Modalidade {cod_modalidade: toInteger(row.cod_modalidade)})
+MATCH (c:Competicao {id_competicao: toInteger(row.id_competicao)})
+MERGE (c)-[:DA_MODALIDADE]->(m);
+
+
+//RelationShip MARCADO_PARA
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///testeclinico.csv" AS row
+MATCH (tc:TesteClinico {id_teste: toInteger(row.id_teste)})
+MATCH (a:Atleta{nif: toInteger(row.nif)})
+MERGE (tc)-[:MARCADO_PARA]->(a);
+
+
+//RelationShip RESPONSAVEL
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///testeclinico.csv" AS row
+MATCH (tc:TesteClinico {id_teste: toInteger(row.id_teste)})
+MATCH (s:Staff{id_staff: toInteger(row.id_staff)})
+MERGE (tc)-[:RESPONSAVEL]->(s);
+
+
+//RelationShip EQUIPA_EVOLVENTE
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///equipaevolvente.csv" AS row
+MATCH (tc:TesteClinico {id_teste: toInteger(row.id_teste)})
+MATCH (s:Staff{id_staff: toInteger(row.id_staff)})
+MERGE (tc)-[:EQUIPA_EVOLVENTE]-(s);
+
+
+//RelationShip USADO
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///recurso.csv" AS row
+MATCH (tc:TesteClinico {id_teste: toInteger(row.id_teste)})
+MATCH (r:Recurso{cod_recurso: toInteger(row.cod_recurso)})
+MERGE (r)-[:USADO]->(tc);
+
+
+//RelationShip REALIZADO_PELA
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///testeclinico.csv" AS row
+MATCH (tc:TesteClinico {id_teste: toInteger(row.id_teste)})
+MATCH (c:Clinica{cod_clinica: toInteger(row.cod_clinica)})
+MERGE (tc)-[:REALIZADO_PELA]->(c);
+
+
+//RelationShip EQUIPA_CLINICA
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///staff_clinica.csv" AS row
+MATCH (s:Staff{id_staff: toInteger(row.Staff_id_staff)})
+MATCH (c:Clinica{cod_clinica: toInteger(row.Clinica_cod_clinica)})
+MERGE (s)-[:EQUIPA_CLINICA]-(c);
+
+
+//RelationShip DIRETOR
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///clinica.csv" AS row
+MATCH (s:Staff{id_staff: toInteger(row.id_staff)})
+MATCH (c:Clinica{cod_clinica: toInteger(row.cod_clinica)})
+MERGE (c)-[:DIRETOR]->(s);
+
+
