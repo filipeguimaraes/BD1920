@@ -157,5 +157,3 @@ LOAD CSV WITH HEADERS FROM "file:///clinica.csv" AS row
 MATCH (s:Staff{id_staff: toInteger(row.id_staff)})
 MATCH (c:Clinica{cod_clinica: toInteger(row.cod_clinica)})
 MERGE (c)-[:DIRETOR]->(s);
-
-
