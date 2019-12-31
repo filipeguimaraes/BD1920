@@ -24,14 +24,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-call addClinica(400, 'bla', 'nheca', 300, 'blhsags', 'g','meh', '2018-01-01');
-
-select * from Clinica;
-select * from Staff;
-
-delete from Clinica where cod_clinica = 400;
-delete from Staff where id_staff = 300;
-
 DELIMITER $$
 CREATE PROCEDURE addAtleta(IN nif INT, IN cod_postal VARCHAR(45), IN DOB DATETIME,
                            IN nome VARCHAR(45), IN sexo VARCHAR(1), IN peso INT,
@@ -82,42 +74,3 @@ BEGIN
     COMMIT;
 END $$
 DELIMITER ;
-
-call addAtleta(0,'n','2000-10-10','d','H',78,'ble','has',1.90);
-
-select * from Atleta;
-select * from Clube;
-select * from Modalidade;
-
-delete from Atleta where nif=0;
-delete from Clube where cod_clube = 10;
-delete from Modalidade where cod_modalidade = 10;
-
-/*DELIMITER $$
-CREATE PROCEDURE addCompeticao (IN idCompeticao INT, IN designacao_competicao VARCHAR(45), 
-								IN cod_modalidade INT, IN nome VARCHAR(45), IN data DATE, 
-                                IN local VARCHAR(45), IN hora TIME, IN designacao_modalidade VARCHAR(45))
-BEGIN
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
-    BEGIN
-        ROLLBACK;
-    END;
-    
-	START TRANSACTION;
-    SET autocommit = 0;
-    
-    -- CRIAR MODALIDADE
-    INSERT INTO Modalidade (cod_modalidade,designacao)
-    VALUES (cod_modalidade,designacao_modalidade);
-    
-    -- CRIAR COMPETICAO
-    INSERT INTO Competicao(id_competicao,designacao,cod_modalidade,nome,data,local,hora)
-    VALUES (id_competicao,designacao_competicao,cod_modalidade,nome,data,local,hora);
-    
-    COMMIT;
-    
-END $$
-DELIMITER ;
-    
-select * from Modalidade;
-select * from Competicao;*/
