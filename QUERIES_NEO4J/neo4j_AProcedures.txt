@@ -1,0 +1,14 @@
+// CREATE PROCEDURE ATodosTestes(IN nif_atleta int)
+MATCH (c:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE a.nif = $nif_atleta RETURN c as TesteClinico
+
+// CREATE PROCEDURE ATestesEmClinica(IN n_clinica int, IN n_atleta INT)
+MATCH (e:Clinica)<-[:REALIZADO_PELA]-(c:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE a.nif = $n_atleta and e.cod_clinica = $n_clinica RETURN c as TesteClinico
+
+// CREATE PROCEDURE ATestesEntreDatas(IN d_start DATE, IN d_end DATE, IN n_atleta INT)
+MATCH (c:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE a.nif = $n_atleta and c.data>= date($d_start) and c.data <=date($d_end) RETURN c as TesteClinico
+
+// CREATE PROCEDURE ATestesPrecoCrescente(In nif_atleta int)
+MATCH (c:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE a.nif = $nif_atleta RETURN c.id_teste as id_teste,c.preco as preco ORDER BY preco
+
+// CREATE PROCEDURE AClinicaEmQueMaisGasta(In nif_atleta int)
+MATCH (e:Clinica)<-[:REALIZADO_PELA]-(c:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE a.nif = $nif_atleta WITH e.cod_clinica as clinica, sum(c.preco) as gastos RETURN clinica,gastos ORDER BY gastos DESC LIMIT 1
