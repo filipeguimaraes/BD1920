@@ -12,7 +12,3 @@ MATCH (s:Staff) WHERE s.id_staff = $id_staff WITH (toInteger(datetime().year) - 
 
 // CREATE FUNCTION quantoCustaTeste (cod_clinica int) returns double deterministic
 MATCH (tc:TesteClinico)-[:REALIZADO_PELA]->(c:Clinica) WHERE c.cod_clinica = $cod_clinica WITH round(toFloat(sum(tc.preco)))/count(tc) as media_custo_testes RETURN media_custo_testes
-
-
-
-
