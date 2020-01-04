@@ -1,0 +1,11 @@
+// create view atletasAlfabeticamente
+MATCH (a:Atleta) RETURN a as atleta ORDER BY a.nome
+
+// create view staffAlfabeticamente
+MATCH (s:Staff) RETURN s as staff ORDER BY s.nome
+
+// create view clinicasAlfabeticamente
+MATCH (c:clinica) RETURN c as clinica ORDER BY c.nome
+
+// create view testesData
+MATCH (tc:TesteClinico) RETURN tc as teste_clinico ORDER BY tc.data
