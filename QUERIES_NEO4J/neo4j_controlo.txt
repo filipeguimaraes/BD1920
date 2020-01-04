@@ -1,0 +1,25 @@
+// CREATE ROLES
+
+CALL dbms.security.createRole('ATLETA');
+CALL dbms.security.createRole('DIRETORCLINICA');
+CALL dbms.security.createRole('DIRETORTESTE');
+
+
+// CREATE USERS
+
+CALL dbms.security.createUser('atleta50', 'atletapassword', true);
+CALL dbms.security.createUser('diretorclinica2', 'diretorclinicapassword', true);
+CALL dbms.security.createUser('diretorteste14', 'diretorteste', true);
+
+
+// ADD ROLES TO USERS
+
+CALL dbms.security.addRoleToUser('ATLETA','atleta50');
+CALL dbms.security.addRoleToUser('DIRETORCLINICA','diretorclinica2');
+CALL dbms.security.addRoleToUser('DIRETORTESTE','diretorteste14');
+
+CALL dbms.security.addRoleToUser('reader','atleta50');
+CALL dbms.security.addRoleToUser('reader','diretorclinica2');
+CALL dbms.security.addRoleToUser('reader','diretorteste14');
+
+
