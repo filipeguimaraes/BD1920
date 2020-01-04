@@ -1,0 +1,19 @@
+// CREATE TRIGGER deleteClube
+MATCH (c:Clube)<-[:COMPETE_POR]-(a:Atleta) WHERE a.nif = $nif_atleta_apagado WITH collect(c.cod_clube) as clubes
+MATCH (c2:Clube)-[rl]-() WITH clubes as clubes2, count(rl) as nao_usados
+MATCH (c3:Clube) WHERE c3.cod_clube in clubes2 and nao_usados = 0 
+DELETE c3
+
+
+// CREATE TRIGGER deleteModalidade
+MATCH (m:Modalidade)<-[:DA_MODALIDADE]-(a:Atleta) WHERE a.nif = $nif_atleta_apagado WITH collect(m.cod_modalidade) as modalidades
+MATCH (m2:Modalidade)-[rl]-() WITH modalidades as modalidades2, count(rl) as nao_usados
+MATCH (m3:Modalidade) WHERE m3.cod_modalidade in modalidades2 and nao_usados = 0 
+DELETE m3
+
+
+// CREATE TRIGGER deleteRecurso
+MATCH (r:Recurso)-[]-(tc:TesteClinico) WHERE tc.id_teste = $id_teste_apagado WITH collect(r.cod_recurso) as recursos
+MATCH (r2:Recurso)-[rl]-() WITH recursos as usados, count(rl) as nao_usados
+MATCH (r3:Recurso) WHERE r3.cod_clube in usados and nao_usados = 0 
+DELETE r3
