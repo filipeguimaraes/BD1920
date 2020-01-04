@@ -21,5 +21,3 @@ CALL dbms.security.addRoleToUser('DIRETORTESTE','diretorteste14');
 CALL dbms.security.addRoleToUser('reader','atleta50');
 CALL dbms.security.addRoleToUser('reader','diretorclinica2');
 CALL dbms.security.addRoleToUser('reader','diretorteste14');
-
-
