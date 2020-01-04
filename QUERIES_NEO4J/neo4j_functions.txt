@@ -1,0 +1,18 @@
+// CREATE FUNCTION recursosGastos (cod_clinica int, di date, df date) returns int deterministic
+MATCH (r:Recurso)-[:USADO]->(tc:TesteClinico)-[:REALIZADO_PELA]->(c:Clinica) WHERE c.cod_clinica = $cod_clinica and date($di) <= tc.data and date($df) >= tc.data RETURN count(r) as recursos_gastos
+
+// CREATE FUNCTION horaMaisTestes (cod_clinica int) returns int deterministic
+MATCH (tc:TesteClinico)-[:REALIZADO_PELA]->(c:Clinica) WHERE c.cod_clinica = $cod_clinica WITH toInteger(round(toFloat(sum(tc.hora.hour))/ toFloat(count(tc)))) as hora_mais_testes RETURN hora_mais_testes
+
+// CREATE FUNCTION quantosFuncionariosCargo (cod_clinica int, cargo varchar(45)) returns int deterministic
+MATCH (s:Staff)-[:EQUIPA_CLINICA]-(c:Clinica) WHERE c.cod_clinica = $cod_clinica and s.cargo = $cargo RETURN count(s) as quantos_funcionarios_cargo
+
+// CREATE FUNCTION quantosAnosServico (id_staff int) returns int deterministic
+MATCH (s:Staff) WHERE s.id_staff = $id_staff WITH (toInteger(datetime().year) - toInteger(s.data_ini_servico.year)) as anos_de_servico RETURN anos_de_servico
+
+// CREATE FUNCTION quantoCustaTeste (cod_clinica int) returns double deterministic
+MATCH (tc:TesteClinico)-[:REALIZADO_PELA]->(c:Clinica) WHERE c.cod_clinica = $cod_clinica WITH round(toFloat(sum(tc.preco)))/count(tc) as media_custo_testes RETURN media_custo_testes
+
+
+
+
