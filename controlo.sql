@@ -3,6 +3,7 @@ Use MedicinaDesporto;
 CREATE ROLE DIRETORCLINICA;
 CREATE ROLE DIRETORTESTE;
 CREATE ROLE ATLETA;
+CREATE ROLE ADMINISTRADOR;
 
 GRANT EXECUTE ON PROCEDURE MedicinaDesporto.DCFaturacaoClinica TO DIRETORCLINICA;
 GRANT EXECUTE ON PROCEDURE MedicinaDesporto.DCClubeMaisTestesEntreDatasClinica TO DIRETORCLINICA;
@@ -22,11 +23,16 @@ GRANT EXECUTE ON PROCEDURE MedicinaDesporto.ATestesEntreDatas TO ATLETA;
 GRANT EXECUTE ON PROCEDURE MedicinaDesporto.ATestesPrecoCrescente TO ATLETA;
 GRANT EXECUTE ON PROCEDURE MedicinaDesporto.ATodosTestes TO ATLETA;
 
-CREATE USER 'diretorclinica2'@'localhost' IDENTIFIED BY 'diretorclinicapassword';
-GRANT DIRETORCLINICA to 'diretorclinica2'@'localhost';
+GRANT ALL PRIVILEGES ON MedicinaDesporto.* TO ADMINISTRADOR WITH GRANT OPTION;
 
-CREATE USER 'diretorteste14'@'localhost' IDENTIFIED BY 'diretorteste';
-GRANT DIRETORTESTE to 'diretorteste14'@'localhost';
+CREATE USER 'diretorclinica2'@'%' IDENTIFIED BY 'diretorclinicapassword';
+GRANT DIRETORCLINICA to 'diretorclinica2'@'%';
 
-CREATE USER 'atleta50'@'localhost' IDENTIFIED BY 'atletapassword';
-GRANT ATLETA to 'atleta50'@'localhost';
+CREATE USER 'diretorteste14'@'%' IDENTIFIED BY 'diretorteste';
+GRANT DIRETORTESTE to 'diretorteste14'@'%';
+
+CREATE USER 'atleta50'@'%' IDENTIFIED BY 'atletapassword';
+GRANT ATLETA to 'atleta50'@'%';
+
+CREATE USER 'administrador'@'%' IDENTIFIED BY 'adminpassword';
+GRANT ADMINISTRADOR to 'administrador'@'%';
