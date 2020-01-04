@@ -1,0 +1,16 @@
+// CREATE PROCEDURE DCFaturacaoClinica(IN n_staff int, IN di DATE, IN df DATE)
+MATCH (s:Staff)<-[:DIRETOR]-(c:Clinica)<-[:REALIZADO_PELA]-(tc:TesteClinico) WHERE s.id_staff = $n_staff and tc.data>= date($di) and tc.data <= date($df) WITH c.cod_clinica as cod_clinica, count(tc) as numero_atletas, sum(tc.preco) as faturacao_total RETURN cod_clinica, numero_atletas, faturacao_total;
+
+// CREATE PROCEDURE DCClubeMaisTestesEntreDatasClinica(IN n_staff int, IN di DATE, IN df DATE)
+MATCH (s:Staff)<-[:DIRETOR]-(c:Clinica)<-[:REALIZADO_PELA]-(tc:TesteClinico)-[:MARCADO_PARA]->(:Atleta)-[:COMPETE_POR]->(e:Clube) WHERE s.id_staff = $n_staff and tc.data>= date($di) and tc.data <= date($df) WITH c.cod_clinica as cod_clinica, count(tc) as numero_testes_clinicos, e.designacao as nome_clube RETURN cod_clinica, nome_clube ,numero_testes_clinicos ORDER BY numero_testes_clinicos DESC, nome_clube LIMIT 1;
+
+// CREATE PROCEDURE DCClubesInexistentesClinica(IN n_staff int)
+MATCH (s:Staff)<-[:DIRETOR]-(c:Clinica)<-[:REALIZADO_PELA]-(:TesteClinico)-[:MARCADO_PARA]->(:Atleta)-[:COMPETE_POR]->(e:Clube) WHERE s.id_staff = 14 WITH collect(DISTINCT e.designacao) as ci
+MATCH (cu:Clube) WHERE not cu.designacao in ci
+RETURN cu.designacao as nome_clube ORDER BY nome_clube
+
+// CREATE PROCEDURE DCStaffAreaClinica (IN n_staff int)
+MATCH (s1:Staff)<-[:DIRETOR]-(c:Clinica)<-[:EQUIPA_CLINICA]-(s2:Staff) WHERE s1.id_staff = 47 WITH count(s2.especialidade) as num_staff, s2.especialidade as especialidade RETURN especialidade, num_staff ORDER BY num_staff
+
+// CREATE PROCEDURE DCMesesOrdemCrescenteClinica(IN n_staff int)
+MATCH (s:Staff)<-[:DIRETOR]-(:Clinica)<-[:REALIZADO_PELA]-(tc:TesteClinico) WHERE s.id_staff = 47 WITH tc.data.month as mes, count(tc) as num_tc RETURN mes, num_tc ORDER BY num_tc

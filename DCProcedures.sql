@@ -16,6 +16,7 @@ CREATE PROCEDURE DCFaturacaoClinica(IN n_staff int, IN di DATE, IN df DATE)
 	end $$
 delimiter ;
 
+
 delimiter $$
 CREATE PROCEDURE DCClubeMaisTestesEntreDatasClinica(IN n_staff int, IN di DATE, IN df DATE)
 	begin
@@ -27,7 +28,7 @@ CREATE PROCEDURE DCClubeMaisTestesEntreDatasClinica(IN n_staff int, IN di DATE, 
 	INNER JOIN Atleta
 	ON Atleta.nif = TesteClinico.nif
 	INNER JOIN Clube
-	ON Atleta.cod_clube = Clube.cod_clube where Clinica.id_staff = 14 and TesteClinico.data between '2015-01-01' and '2016-01-01' group by Clube.designacao order by count(Clube.designacao) DESC limit 1;
+	ON Atleta.cod_clube = Clube.cod_clube where Clinica.id_staff = n_staff and TesteClinico.data between di and df group by Clube.designacao order by count(Clube.designacao) DESC limit 1;
 	end $$
 delimiter ;
 
@@ -64,6 +65,7 @@ from Clinica as C
 group by S.especialidade order by count(S.especialidade);
 end $$
 delimiter ;
+
 
 delimiter $$
 create procedure DCMesesOrdemCrescenteClinica(IN n_staff int)
