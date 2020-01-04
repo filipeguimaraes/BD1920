@@ -1,0 +1,21 @@
+// CREATE PROCEDURE DTRecursosTeste(IN n_staff int)
+MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)<-[:USADO]-(r:Recurso) WHERE s.id_staff = $n_staff WITH tc.id_teste as id_teste, r.designacao as designacao RETURN id_teste, designacao
+
+// CREATE PROCEDURE DTClinicaRealizouMaisTestes(In n_staff int)
+MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:REALIZADO_PELA]->(c:Clinica) WHERE s.id_staff = $n_staff WITH c.cod_clinica as cod , c.nome as nome, count(tc.id_teste) as num_teste RETURN nome, num_teste ORDER BY num_teste DESC LIMIT 1
+
+// CREATE PROCEDURE DTComQuemTrabalhouTestes(In n_staff int)
+MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:EQUIPA_EVOLVENTE]->(s2:Staff) WHERE s.id_staff = $n_staff WITH tc.id_teste as id_teste, s2.nome as nome RETURN id_teste, nome
+
+// CREATE PROCEDURE DTAtletasTestes(In n_staff int)
+MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WHERE s.id_staff = $n_staff WITH tc.id_teste as id_teste, a as atleta RETURN id_teste, atleta
+
+// CREATE PROCEDURE DTContactoAtletasTestes(In n_staff int)
+MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:MARCADO_PARA]->(a:Atleta)<-[:CONTACTO_DE]-(c:Contacto) WHERE s.id_staff = $n_staff WITH tc.id_teste as id_teste, a.nome as nome, c.contactocol as contacto RETURN id_teste,nome,contacto
+
+
+
+
+
+
+
