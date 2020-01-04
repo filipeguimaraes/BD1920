@@ -12,10 +12,3 @@ MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:MARCADO_PARA]->(a:Atleta) WH
 
 // CREATE PROCEDURE DTContactoAtletasTestes(In n_staff int)
 MATCH (s:Staff)<-[:RESPONSAVEL]-(tc:TesteClinico)-[:MARCADO_PARA]->(a:Atleta)<-[:CONTACTO_DE]-(c:Contacto) WHERE s.id_staff = $n_staff WITH tc.id_teste as id_teste, a.nome as nome, c.contactocol as contacto RETURN id_teste,nome,contacto
-
-
-
-
-
-
-
